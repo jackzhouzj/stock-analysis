@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: ""
+title: 股票分析系统根目录（项目说明与忽略规则）
+scope:
+    - README.MD
+    - .gitignore
+source_files: []
+depends_on: []
+related_to: []
