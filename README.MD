@@ -84,3 +84,134 @@ stock-analysis/
 - **方法论 + 执行版成对** — 每条线都有理念篇和可执行的量化筛选版
 - **数据驱动** — 所有分析基于实时数据，减少主观判断
 - **可迭代** — 策略可根据执行结果持续优化
+
+---
+
+## 环境配置
+
+### 前置要求
+
+| 依赖 | 版本要求 | 用途 |
+|------|----------|------|
+| Python | ≥ 3.10 | plate-rotation 脚本、ifind-finance-data 备用调用 |
+| Node.js | ≥ 16.x | ifind-finance-data 主调用方式（call-node.js） |
+| pip | 随 Python 自带 | 安装 requests 库（ifind Python 方案需要） |
+
+### 安装步骤
+
+#### 1. 克隆项目
+
+```bash
+git clone <repo-url> stock-analysis
+cd stock-analysis
+```
+
+#### 2. 配置 MCP（数据接口）
+
+本项目使用同花顺 iFinD MCP 作为主数据源。
+
+**方式一：IDE 全局配置（推荐）**
+
+在 Qoder/Claude 的 MCP 设置中添加以下服务：
+
+```json
+{
+  "mcpServers": {
+    "hexin-ifind-ds-stock-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-stock-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-fund-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-fund-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-edb-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-edb-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-news-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-news-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-bond-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-bond-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-global-stock-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-global-stock-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    },
+    "hexin-ifind-ds-index-mcp": {
+      "type": "streamablehttp",
+      "url": "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-index-mcp",
+      "headers": { "Authorization": "<your-ifind-token>" }
+    }
+  }
+}
+```
+
+> Token 获取：https://www.51ifind.com → MCP官网 → 个人中心 → 密钥
+
+**方式二：项目内配置**
+
+直接编辑 `mcp/同花顺_MCP.json`，填入真实 token，然后在 IDE 中导入该配置文件。
+
+#### 3. 配置 Skills
+
+**plate-rotation（板块轮动）**：
+
+```bash
+# 无额外依赖，仅需 Python 3.10+，用内置库
+# 验证运行：
+python3 skills/plate-rotation-skill/scripts/platerotat.py today --n 3
+```
+
+**ifind-finance-data（iFinD 数据查询）**：
+
+```bash
+# 方式一：Node.js（推荐，无额外依赖）
+# 确保 node ≥ 16.x 即可
+
+# 方式二：Python（备选）
+pip install requests
+```
+
+配置密钥：
+
+```bash
+# 编辑 skills/ifind-finance-data-1.3.0/mcp_config.json
+# 将 auth_token 替换为真实的 iFinD token
+```
+
+#### 4. 验证安装
+
+```bash
+# 验证 plate-rotation
+python3 skills/plate-rotation-skill/scripts/platerotat.py today --n 3
+# 应输出 Top 3 板块排名
+
+# 验证 MCP（在 Qoder/Claude 中）
+# 输入：贵州茅台最新估值
+# 应返回 PE/PB/PS 等数据
+```
+
+#### 5. 安全配置（推送代码前必做）
+
+确保 `.gitignore` 包含：
+
+```
+# Token / 密钥
+mcp/同花顺_MCP.json
+skills/ifind-finance-data-1.3.0/mcp_config.json
+
+# 缓存
+__pycache__/
+*.pyc
+.cache/
+```
