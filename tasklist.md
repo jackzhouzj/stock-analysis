@@ -14,18 +14,20 @@
 
 ## P1 — 数据源扩展
 
-- [ ] **接入新浪财经 MCP**
+- [ ] **接入新浪财经 MCP**（优先级已下调 ⬇️）
+
   - 用途：免费实时市场情绪数据（涨跌分布、涨停数量、炸板率），补充短线环境判断
   - 地址：https://zyhub.finance.sina.cn/mcp
+  - **⚠️ 2026-07-02 校正**：经实测，**iFinD `search_stocks` 已可取到连板梯队（连续涨停天数）与炸板率（最高价触及涨停价但收盘<涨停价）**，情绪数据缺口已由现有数据源补齐。本项降级为"可选备用源/交叉验证"，非必需。
   - 接入方式：见下方「接入方法」
+- [ ] **A股涨停追踪模块调研**（优先级已下调 ⬇️）
 
-- [ ] **A股涨停追踪模块调研**
   - 用途：涨停/连板/炸板率量化数据，增强短线策略的情绪周期判断
   - 候选：GitHub `a-stock` topic 下 29 个 Skills 中的涨停追踪模块
   - 参考：https://github.com/topics/a-stock
-  - 状态：待调研可用性和数据质量
-
+  - **⚠️ 2026-07-02 校正**：涨停/连板/炸板数据 iFinD `search_stocks` 已覆盖（见 `strategy/大盘环境模块.md` 取数配方），本项仅在需要更细颗粒（如封单额、开板时点、连板晋级率）时再评估。
 - [ ] **接入 Tushare MCP**
+
   - 用途：作为 iFinD 的备用数据源（免费层 + Pro 层）
   - 地址：https://github.com/buuzzy/tushare_MCP
   - 接入方式：见下方「接入方法」
@@ -35,24 +37,25 @@
 ## P1.5 — 分析能力扩展（Skills / Agent）
 
 - [ ] **Claude-Code-Stock-Deep-Research-Agent**
+
   - 用途：8 阶段股票投资尽调框架，28 个并行研究 Agent，深度研报级分析
   - 地址：https://github.com/liangdabiao/Claude-Code-Stock-Deep-Research-Agent
   - 与本项目互补：比体检策略更深入，适合重仓标的的深度研究
   - 接入方式：见下方「接入方法」
-
 - [ ] **A股 29 个即插即用 Skills**
+
   - 用途：覆盖数据采集/大盘分析/资金流向/涨停追踪/技术面/基本面/估值/回测/风控
   - 地址：https://github.com/topics/a-stock
   - 与本项目互补：挑选「涨停追踪」「资金流向」补充现有策略缺少的维度
   - 接入方式：见下方「接入方法」
-
 - [ ] **Day1Global-Skills（科技股财报深度分析）**
+
   - 用途：16 大分析模块、6 大投资哲学视角、多方法估值矩阵
   - 地址：https://gitcode.com/gh_mirrors/da/Day1Global-Skills
   - 与本项目互补：如果重仓科技股，可用于财报季深度分析
   - 接入方式：见下方「接入方法」
-
 - [ ] **daily_stock_analysis（自动化日报）**
+
   - 用途：LLM 驱动的多市场股票智能分析 + 定时推送
   - 地址：https://skillsllm.com/skill/daily-stock-analysis
   - 与本项目互补：每日收盘后自动跑策略路由 + 环境判断
@@ -63,10 +66,11 @@
 ## P2 — 功能补全
 
 - [ ] **持仓管理模板**
+
   - 用途：跟踪当前持仓、入场价、止损位、复检状态、下次验证节点
   - 位置：`strategy/持仓管理.md` 或 `manual/持仓管理模板.md`
-
 - [ ] **实战案例**
+
   - 用途：放 1-2 个真实体检报告示例，让 AI 输出有参照格式
   - 位置：`examples/` 目录
 
@@ -79,6 +83,7 @@
 - [ ] **自动化日报** — 每日收盘后自动生成市场环境 + 策略路由判断
 
 ---
+
 ---
 
 # 数据源接入方法
@@ -88,6 +93,7 @@
 **概述**：免费、无需 token，提供 A 股实时涨跌分布、市场情绪数据。
 
 **能力**：
+
 - 涨跌分布统计（涨停/跌停/各区间数量）
 - 市场整体情绪判断
 
@@ -107,6 +113,7 @@
 **验证**：接入后调用涨跌分布查询工具，确认能返回当日数据。
 
 **用途映射**：
+
 - 短线环境闸 → 市场赚钱效应判断
 - 策略路由 → 涨停数/炸板率辅助环境定性
 
@@ -117,6 +124,7 @@
 **概述**：基于 Tushare Pro 的 MCP 服务，30+ 金融数据接口，作为 iFinD 备用。
 
 **前置条件**：
+
 1. 注册 Tushare Pro 账号：https://tushare.pro/register
 2. 获取 API token（个人中心 → 接口TOKEN）
 
@@ -151,12 +159,14 @@ export TUSHARE_TOKEN="your_tushare_pro_token"
 ```
 
 **主要能力**：
+
 - 日线/周线/月线行情
 - 财务报表（利润表/资产负债表/现金流量表）
 - 公司基本面（股本/股东/分红）
 - 市场参考数据（复权因子/停复牌）
 
 **用途映射**：
+
 - iFinD 接口异常时的降级备选
 - 历史数据回测场景
 
@@ -192,11 +202,13 @@ npm install
 ```
 
 **主要能力**：
+
 - `brief`：股票基本信息摘要
 - 实时行情/K线
 - 板块信息
 
 **用途映射**：
+
 - 快速获取个股基本信息（体检第 1 步补充）
 - 轻量场景下替代 iFinD 的 `get_stock_summary`
 
@@ -207,6 +219,7 @@ npm install
 **概述**：GitHub 上有覆盖 A 股多维度分析的 Skills 集合。
 
 **参考项目**：
+
 - https://github.com/topics/a-stock（29 个即插即用 Skills）
 - 覆盖：数据采集/大盘分析/资金流向/涨停追踪/技术面/基本面/估值/回测/风控
 
@@ -221,6 +234,7 @@ git clone <skill-repo-url> skills/<skill-name>/
 ```
 
 **重点关注模块**：
+
 - 涨停追踪 — 补充短线策略的情绪周期（涨停数/连板高度/炸板率）
 - 资金流向 — 与现有 iFinD 资金数据交叉验证
 
@@ -231,6 +245,7 @@ git clone <skill-repo-url> skills/<skill-name>/
 **概述**：基于 Claude Code 的股票深度研究智能体，8 阶段尽调框架，28 个并行研究 Agent。
 
 **能力**：
+
 - 8 阶段尽调：行业分析 → 竞争格局 → 财务深度 → 估值建模 → 风险评估 → 多空平衡 → 结论
 - 多空平衡视角，比体检策略更深入
 
@@ -245,6 +260,7 @@ git clone https://github.com/liangdabiao/Claude-Code-Stock-Deep-Research-Agent.g
 ```
 
 **用途映射**：
+
 - 重仓标的的深度研究（体检通过后的二次确认）
 - 长线核心仓候选的深度尽调
 
@@ -255,6 +271,7 @@ git clone https://github.com/liangdabiao/Claude-Code-Stock-Deep-Research-Agent.g
 **概述**：专为 Claude 打造的科技公司财报深度分析系统。16 大分析模块、6 大投资哲学视角。
 
 **能力**：
+
 - 16 大分析模块（营收/利润/现金流/资本配置/增长质量...）
 - 6 大投资哲学视角（巴菲特/戴维斯/彼得林奇...）
 - 多方法估值矩阵 + 反偏见框架
@@ -269,6 +286,7 @@ git clone https://gitcode.com/gh_mirrors/da/Day1Global-Skills.git skills/day1glo
 ```
 
 **用途映射**：
+
 - 长线持仓季度复检时的财报深度分析
 - 科技股体检第 3 步（基本面）的深化版
 
@@ -279,6 +297,7 @@ git clone https://gitcode.com/gh_mirrors/da/Day1Global-Skills.git skills/day1glo
 **概述**：LLM 驱动的多市场股票智能分析系统，支持定时运行和自动推送。
 
 **能力**：
+
 - 多源行情数据采集
 - 实时新闻整合
 - 决策看板生成
@@ -299,6 +318,7 @@ git clone <daily-stock-analysis-repo>
 ```
 
 **用途映射**：
+
 - 自动化 P3 待办「自动化日报」的实现参考
 - 每日策略路由 + 持仓复检的自动化
 
