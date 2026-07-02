@@ -14,7 +14,10 @@ author: iFinD
 ---
 
 ## 使用方法
-本 skill 封装了同花顺金融数据MCP服务的调用接口，支持 Python 和 Node.js 两种调用方式：
+
+> **取数方式优先级（重要）**：**优先直接调用已接入的 iFinD MCP 工具**（如 `get_stock_financials`、`get_risk_indicators`、`index_highfreq_quotes`、`get_edb_data` 等）进行查询；**仅当 MCP 工具不可用**（未接入 / 无权益 / 调用异常）时，才回退到本 skill 内的脚本方案（`call-node.js` / `call.py`）。这样能减少临时脚本生成、降低密钥落地风险，并与 `SKILL.md` 的统一取数约定保持一致。
+
+本 skill 的脚本方案是 MCP 不可用时的**备选通道**，封装了同花顺金融数据MCP服务的调用接口，支持 Python 和 Node.js 两种调用方式：
 - **Node.js方案**：使用 `call-node.js` 脚本（无需额外依赖，使用内置模块）
 - **Python方案**：使用 `call.py` 脚本（需安装 `requests` 库）
 - **推荐方案**：当用户未指定python，或不确定python环境时，优先使用Node.js方案
