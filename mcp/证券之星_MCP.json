@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "stockstar": {
+      "url": "https://zqzxmcp.stockstar.com/sse?key=volcengine"
+    }
+  }
+}
