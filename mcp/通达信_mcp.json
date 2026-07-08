@@ -1,0 +1,13 @@
+{
+  "tdx": {
+    "url": "https://mcp.tdx.com.cn:3001/mcp",
+    "headers": {
+      "tdx-api-key": "TDX-ba07ae4fdaf176cfdc3f4e46aab6471a"
+    },
+    "autoApprove": [
+      "tdx_wenda_quotes",
+      "tdx_wenda_quotes",
+      "*"
+    ]
+  }
+}

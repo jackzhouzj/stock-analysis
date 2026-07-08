@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "company-query-risk": {
+      "type": "streamableHttp",
+      "url": "https://dashscope.aliyuncs.com/api/v1/mcps/market-cmapi00071991/mcp",
+      "headers": {
+        "Authorization": "Bearer sk-c20d1a2adf584db8ae0064a44adc3684"
+      },
+      "autoApprove": [
+        "*"
+      ]
+    },
+    "xiaoba-stock": {
+      "type": "sse",
+      "url": "https://dashscope.aliyuncs.com/api/v1/mcps/aivalue/sse",
+      "headers": {
+        "Authorization": "Bearer sk-c20d1a2adf584db8ae0064a44adc3684"
+      }
+    }
+  }
+}
